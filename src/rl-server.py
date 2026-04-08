@@ -7,8 +7,8 @@ from cnn_feature_extractor import LidarCNNFeatureExtractor
 from stable_baselines3.common.vec_env import VecNormalize
 from stable_baselines3.common.monitor import Monitor
 
-TRAIN_STEPS = 3_000_000
-N_ROBOTS = 9
+TRAIN_STEPS = 1_000_000
+N_ROBOTS = 3
 
 
 def train_model(new=False):
@@ -48,9 +48,9 @@ def train_model(new=False):
                 env,
                 policy_kwargs=policy_kwargs,
                 verbose=1,
-                n_steps=8192,
+                n_steps=4096,
                 learning_rate=5e-5,
-                batch_size=1024,
+                batch_size=512,
                 n_epochs=20,
                 clip_range=0.1,
                 ent_coef=0.01,

@@ -1,4 +1,4 @@
-#VRML_SIM R2025a utf8
+#VRML_SIM R2023b utf8
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/apartment_structure/protos/Wall.proto"
@@ -11,8 +11,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
-  position -0.12110618089106157 -0.14689462065654466 24.268053877871928
+  orientation -0.5694969136918758 0.5694969794284486 0.5927448487480101 2.0714620149243514
+  position -0.12109792941684838 -0.6805049595751878 26.652595267013382
 }
 TexturedBackground {
   skyColor [
@@ -20,8 +20,24 @@ TexturedBackground {
   ]
 }
 DEF Giorgio TurtleBot3Burger {
-  translation -4.26204 -4.5 0
-  rotation 0 0 1 1.5707963267948966
+  hidden position_0_0 21145.059458633143
+  hidden position_0_1 16814.7369284069
+  hidden position_0_2 -57300.630097812995
+  hidden position2_0_2 2.4141398080018757
+  hidden position3_0_2 69.09161302792536
+  hidden linearVelocity_0 5.19479907926725e-14 1.8480475133545328e-07 -1.3497272760627158e-12
+  hidden angularVelocity_0 7.66450210907397e-09 1.87348028252546e-12 -9.239135836862456e-11
+  hidden rotation_11 0 -1 0 5.713081333345439
+  hidden linearVelocity_11 2.188321260233778e-12 1.8492699014937592e-07 6.011178782719108e-10
+  hidden angularVelocity_11 -9.923909586406874e-06 -1.179998942447901 -1.3958034900015238e-05
+  hidden rotation_12 -0.9495878285743764 1.0465545272356642e-06 -0.3135011257113848 3.1415884972942734
+  hidden linearVelocity_12 -2.1218670121803517e-12 1.8492501919027016e-07 -6.011568284895098e-10
+  hidden angularVelocity_12 -6.894112801548358e-06 -0.8199989814297174 -9.698852656766621e-06
+  hidden rotation_13 -0.30141322554109573 -0.5107597497588541 -0.8051549822830293 3.5412169394179807
+  hidden linearVelocity_13 -1.6931354760477737e-14 1.8514444083182086e-07 -3.205920433317637e-13
+  hidden angularVelocity_13 -4.628610865689282e-05 -4.2328385482756515e-12 -1.1833667986458972e-20
+  translation -4.9150431134226 -4.004268321045181 -0.0002203096447028971
+  rotation 0.0031533490014608576 -5.926967756766822e-06 0.9999950281651135 3.141584274051719
   name "Giorgio 0"
   controller "robot_client"
   controllerArgs [
@@ -49,8 +65,24 @@ DEF Giorgio TurtleBot3Burger {
   ]
 }
 DEF Giorgio TurtleBot3Burger {
-  translation -2.73813 -4.50357 0
-  rotation 0 0 1 1.5707963267948966
+  hidden position_0_0 4926.882277567356
+  hidden position_0_1 9183.075562946735
+  hidden position_0_2 -57021.226149592796
+  hidden position2_0_2 14.231663332968603
+  hidden position3_0_2 16277.665959368203
+  hidden linearVelocity_0 -0.0021778264841350015 -0.00044351353614787835 7.866930908056314e-12
+  hidden angularVelocity_0 -1.2828259243476801e-09 4.044857036582061e-09 -0.0669023903327063
+  hidden rotation_11 0 -0.9999999999999999 0 0.7057992614396289
+  hidden linearVelocity_11 0.0010944355529543552 -0.005239171371730251 -3.38047529692016e-10
+  hidden angularVelocity_11 0.17619749485011946 0.03680263074363829 -0.06690617100778239
+  hidden rotation_12 0.6328919454174401 -2.3151431287756194e-06 -0.774240134209257 3.1415921884584823
+  hidden linearVelocity_12 -0.001094531165426171 0.005239308173279256 3.2417004967462064e-10
+  hidden angularVelocity_12 -0.17619749725497763 -0.03680262267081825 -0.06690968246798701
+  hidden rotation_13 -0.7181865666956032 -0.055625160813109975 -0.6936237430354426 3.3769779537593316
+  hidden linearVelocity_13 -0.0052958450702932066 -0.001106087607977319 2.7557612476112356e-11
+  hidden angularVelocity_13 0.27652190208932376 -1.32396126755351 -0.0005735079835576453
+  translation -2.738186763342735 -4.50313175286807 -0.0002477361408385684
+  rotation -0.0023170868705798815 0.0018932851963351354 -0.9999955232797793 -1.7756404831303154
   name "Giorgio 1"
   controller "robot_client"
   controllerArgs [
@@ -80,8 +112,24 @@ DEF Giorgio TurtleBot3Burger {
   ]
 }
 DEF Giorgio TurtleBot3Burger {
-  translation -1.21111 -4.55 0
-  rotation 0.002315935868123677 -0.002369048213874898 0.9999945120107485 1.5708
+  hidden position_0_0 21150.65660650883
+  hidden position_0_1 16787.38088840472
+  hidden position_0_2 -57114.59807994883
+  hidden position2_0_2 9.664352120104835
+  hidden position3_0_2 -141.27869022117014
+  hidden linearVelocity_0 -4.259468007550083e-13 1.850571408054199e-07 4.597077984865136e-13
+  hidden angularVelocity_0 1.0203507002208565e-10 -7.186394618717317e-12 -9.452615039194388e-10
+  hidden rotation_11 0 -1 0 0.11593345765801712
+  hidden linearVelocity_11 1.0645247211883634e-10 1.8509016690062813e-07 8.23446468855191e-12
+  hidden angularVelocity_11 -9.92858197374528e-06 -1.1799989424446053 -1.3938619822189052e-05
+  hidden rotation_12 -0.13980962167128883 -1.3991000763695744e-06 -0.9901784029588677 3.1415889352603474
+  hidden linearVelocity_12 -1.0676909852365336e-10 1.8508797679069963e-07 -7.738410401750719e-12
+  hidden angularVelocity_12 -6.899664882197956e-06 -0.8199989814517343 -9.685604835330798e-06
+  hidden rotation_13 0.9913422555800622 -0.07312319970398985 -0.1090574617643611 2.6905608842925366
+  hidden linearVelocity_13 5.293246094759602e-14 1.8501675522723443e-07 6.335743611072914e-13
+  hidden angularVelocity_13 -4.62541872568159e-05 1.323311479345307e-11 -1.182550238531277e-21
+  translation -1.9109731134227463 -4.040627130364852 -0.0002203096450969083
+  rotation 0.0031533490059435965 -5.918325622219482e-06 0.9999950281651507 3.1415842764589623
   name "Giorgio 2"
   controller "robot_client"
   controllerArgs [
@@ -107,192 +155,6 @@ DEF Giorgio TurtleBot3Burger {
     Receiver {
       name "Receiver"
       channel 2
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation 0.26763 -4.55 0
-  rotation 0 0 1 1.5708
-  name "Giorgio 3"
-  controller "robot_client"
-  controllerArgs [
-    "3"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 3
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 3
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation 4.05421 -4.63277 -0.000205305
-  rotation 0 0 1 1.5708
-  name "Giorgio 4"
-  controller "robot_client"
-  controllerArgs [
-    "4"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 4
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 4
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation -4.24028 -1.49279 -0.000247793
-  rotation 0 0 1 1.5708
-  name "Giorgio 5"
-  controller "robot_client"
-  controllerArgs [
-    "5"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 5
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 5
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation 1.80759 -1.52385 -0.000184825
-  rotation 0.0023155291401616295 -0.0023245141011417375 0.9999946174650115 1.57115409546528
-  name "Giorgio 6"
-  controller "robot_client"
-  controllerArgs [
-    "6"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 6
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 6
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation 0.461202 1.68911 0.014349
-  rotation 0.0023159358681174164 -0.002369048213867623 0.9999945120107486 1.5520359870899012
-  name "Giorgio 8"
-  controller "robot_client"
-  controllerArgs [
-    "8"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 8
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 8
-    }
-  ]
-}
-DEF Giorgio TurtleBot3Burger {
-  translation -4.2023 1.60079 0.0285433
-  rotation 0.0023155291112882488 -0.0023245141192599944 0.9999946174650364 1.571154075248324
-  name "Giorgio 7"
-  controller "robot_client"
-  controllerArgs [
-    "7"
-  ]
-  supervisor TRUE
-  extensionSlot [
-    Emitter {
-      name "Emitter"
-      channel 7
-    }
-    RobotisLds01 {
-      name "Lidar"
-    }
-    TouchSensor {
-      rotation 0 0 1 4.692820414042842e-06
-      name "Bumper"
-      boundingObject Cylinder {
-        height 0.1
-        radius 0.11
-      }
-    }
-    Receiver {
-      name "Receiver"
-      channel 7
     }
   ]
 }
@@ -325,35 +187,7 @@ DEF End_Strip Robot {
   controller "end_strip_controller"
 }
 DEF End_Strip Robot {
-  translation 3.96 -0.7 0.03
-  rotation 0 0 1 1.01503e-06
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.8 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 4
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.8 0.15 0.05
-      }
-    }
-  ]
-  name "robot(1)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation -1.04326 1.62735 0.03
+  translation -2.75 -2.3 0.03
   children [
     Shape {
       appearance Appearance {
@@ -367,7 +201,7 @@ DEF End_Strip Robot {
     }
     Emitter {
       name "Emitter"
-      channel 8
+      channel 1
     }
     TouchSensor {
       name "Bumper"
@@ -376,90 +210,7 @@ DEF End_Strip Robot {
       }
     }
   ]
-  name "robot(7)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation -2.55326 1.63735 0.03
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.3 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 7
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.3 0.15 0.05
-      }
-    }
-  ]
-  name "robot(8)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation -1.74 0.37 0.03
-  rotation 0 0 1 1.5708
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.3 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 5
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.3 0.15 0.05
-      }
-    }
-  ]
-  name "robot(5)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation -1.05 0.37 0.03
-  rotation 0 0 1 1.5708
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.3 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 6
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.3 0.15 0.05
-      }
-    }
-  ]
-  name "robot(6)"
+  name "robot(4)"
   controller "end_strip_controller"
 }
 DEF End_Strip Robot {
@@ -487,60 +238,6 @@ DEF End_Strip Robot {
     }
   ]
   name "robot(2)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation 0.25 -2.3 0.03
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.3 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 3
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.3 0.15 0.05
-      }
-    }
-  ]
-  name "robot(3)"
-  controller "end_strip_controller"
-}
-DEF End_Strip Robot {
-  translation -2.75 -2.3 0.03
-  children [
-    Shape {
-      appearance Appearance {
-        material Material {
-          diffuseColor 0 0.5 0
-        }
-      }
-      geometry Box {
-        size 1.3 0.1 0.01
-      }
-    }
-    Emitter {
-      name "Emitter"
-      channel 1
-    }
-    TouchSensor {
-      name "Bumper"
-      boundingObject Box {
-        size 1.3 0.15 0.05
-      }
-    }
-  ]
-  name "robot(4)"
   controller "end_strip_controller"
 }
 DEF Scene Group {

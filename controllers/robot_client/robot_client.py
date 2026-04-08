@@ -84,7 +84,7 @@ class RobotClient(Supervisor):
 
             if collided or end:
                 with open(
-                    f"/home/marco-vb/ros/rl-webots/data/positions/{self.id}/t_{it}.csv",
+                    f"/home/seb/Deep_RL_LIDAR_navigation/data/positions/{self.id}/t_{it}.csv",
                     "w",
                     newline="",
                 ) as f:
