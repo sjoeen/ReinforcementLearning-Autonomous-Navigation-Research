@@ -8,10 +8,11 @@ from stable_baselines3.common.monitor import Monitor
 import csv
 
 TIME_STEPS = 60_000
-N_ROBOTS = 9
+N_ROBOTS = 3
+OUTPUT_FILE = "results_evaluation.csv"
+AGG_FILE = "results_aggregate.csv"
 
 def run_model():
-    """Start vectorized environment to test model in parallel"""
     def env_fn(i):
         def _init():
             return Monitor(WheelchairEnv(i))
@@ -20,63 +21,134 @@ def run_model():
     env = SubprocVecEnv([env_fn(i) for i in range(N_ROBOTS)])
     env = VecNormalize(env, norm_obs=True, norm_reward=False)
 
-    # CHANGE THIS PATH TO THE MODEL YOU WANT TO TEST BEFORE RUNNING!
-    path = "./models/ppo-good" 
-    assert os.path.exists(path + ".zip"), "Model path does not exist. Please train the model first."
+    # CHANGE THIS PATH BEFORE RUNNING
+    path = "models/model_A_baseline"
+    assert os.path.exists(path + ".zip"), "Model path does not exist."
 
     model = PPO.load(path, env)
 
-    success_counts = [0] * N_ROBOTS
-    episode_counts = [0] * N_ROBOTS
-    total_times = [0.0] * N_ROBOTS
-    total_distances = [0.0] * N_ROBOTS
-    
-    start_times = [time.time()] * N_ROBOTS
-    episode_distances = [[] for _ in range(N_ROBOTS)]
+    # ── Counters ─────────────────────────────────────────────
+    success_counts   = [0] * N_ROBOTS
+    collision_counts = [0] * N_ROBOTS
+    timeout_counts   = [0] * N_ROBOTS
+    episode_counts   = [0] * N_ROBOTS
+
+    total_times        = [0.0] * N_ROBOTS
+    total_steps        = [0]   * N_ROBOTS
+    total_mean_dist    = [0.0] * N_ROBOTS
+    total_min_dist     = [0.0] * N_ROBOTS
+
+    start_times        = [time.time()] * N_ROBOTS
+    episode_steps      = [0] * N_ROBOTS
+    episode_distances  = [[] for _ in range(N_ROBOTS)]
 
     print("Testing started! Please wait...")
     obs = env.reset()
-    
+
     for _ in range(TIME_STEPS):
         action, _ = model.predict(obs, deterministic=True)
         obs, rewards, dones, infos = env.step(action)
 
         for i in range(N_ROBOTS):
-            # Guardar a distância mínima lida pelo LiDAR neste instante
+            episode_steps[i] += 1
             episode_distances[i].append(np.min(obs[i]))
 
             if dones[i]:
                 episode_counts[i] += 1
-                if infos[i].get("is_success", False):
+
+                # ── Outcome classification ───────────────────
+                is_success = infos[i].get("is_success", False)
+                is_collision = (not is_success) and (episode_steps[i] < 19000)
+                is_timeout   = (not is_success) and (episode_steps[i] >= 19000)
+
+                if is_success:
                     success_counts[i] += 1
-                
-                # Calcular o tempo que o episódio demorou
+                elif is_collision:
+                    collision_counts[i] += 1
+                else:
+                    timeout_counts[i] += 1
+
+                # ── Time ─────────────────────────────────────
                 end_time = time.time()
                 total_times[i] += (end_time - start_times[i])
-                start_times[i] = time.time() # Reset ao cronómetro
-                
-                # Calcular a distância média ao longo deste episódio
-                total_distances[i] += np.mean(episode_distances[i])
-                episode_distances[i] = [] # Reset às distâncias
+                start_times[i] = time.time()
+
+                # ── Steps ────────────────────────────────────
+                total_steps[i] += episode_steps[i]
+
+                # ── Distance metrics ─────────────────────────
+                if episode_distances[i]:
+                    ep_mean = np.mean(episode_distances[i])
+                    ep_min  = np.min(episode_distances[i])
+                else:
+                    ep_mean = ep_min = 0.0
+
+                total_mean_dist[i] += ep_mean
+                total_min_dist[i]  += ep_min
+
+                # ── Reset episode ────────────────────────────
+                episode_steps[i] = 0
+                episode_distances[i] = []
 
     print("\n=== FINAL RESULTS ===")
-    with open("results_evaluation.csv", "w", newline="") as f:
+
+    # ── Per-robot CSV ─────────────────────────────────────────
+    with open(OUTPUT_FILE, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["robot_id", "success_rate", "avg_time", "avg_distance"])
-        
+        writer.writerow([
+            "robot_id", "episodes",
+            "success_rate_%", "collision_rate_%", "timeout_rate_%",
+            "avg_steps", "avg_time_s",
+            "avg_mean_distance", "avg_min_distance"
+        ])
+
         for i in range(N_ROBOTS):
-            if episode_counts[i] > 0:
-                rate = 100 * success_counts[i] / episode_counts[i]
-                avg_t = total_times[i] / episode_counts[i]
-                avg_d = total_distances[i] / episode_counts[i]
-                print(f"Robot {i}: {rate:.1f}% Success | Time: {avg_t:.1f}s | Dist: {avg_d:.2f}")
-            else:
-                rate = avg_t = avg_d = 0
-                print(f"Robot {i}: no completed episodes.")
-                
-            writer.writerow([i, f"{rate:.2f}", f"{avg_t:.2f}", f"{avg_d:.2f}"])
-            
-    print("\nResults saved to 'results_evaluation.csv'")
+            n = max(episode_counts[i], 1)
+
+            sr = 100 * success_counts[i]   / n
+            cr = 100 * collision_counts[i] / n
+            tr = 100 * timeout_counts[i]   / n
+            avg_steps = total_steps[i]     / n
+            avg_time  = total_times[i]     / n
+            avg_mean  = total_mean_dist[i] / n
+            avg_min   = total_min_dist[i]  / n
+
+            print(f"Robot {i}: {sr:.1f}% success | {cr:.1f}% collision | {tr:.1f}% timeout | "
+                  f"{avg_steps:.0f} steps | mean_d={avg_mean:.2f} | min_d={avg_min:.2f}")
+
+            writer.writerow([
+                i, episode_counts[i],
+                f"{sr:.2f}", f"{cr:.2f}", f"{tr:.2f}",
+                f"{avg_steps:.1f}", f"{avg_time:.2f}",
+                f"{avg_mean:.4f}", f"{avg_min:.4f}"
+            ])
+
+    print(f"\nSaved: {OUTPUT_FILE}")
+
+    # ── Aggregate CSV ─────────────────────────────────────────
+    total_ep = sum(episode_counts)
+    n = max(total_ep, 1)
+
+    with open(AGG_FILE, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "model", "episodes",
+            "success_rate_%", "collision_rate_%", "timeout_rate_%",
+            "avg_steps", "avg_mean_distance", "avg_min_distance"
+        ])
+
+        writer.writerow([
+            os.path.basename(path), total_ep,
+            f"{100*sum(success_counts)/n:.2f}",
+            f"{100*sum(collision_counts)/n:.2f}",
+            f"{100*sum(timeout_counts)/n:.2f}",
+            f"{sum(total_steps)/n:.1f}",
+            f"{sum(total_mean_dist)/n:.4f}",
+            f"{sum(total_min_dist)/n:.4f}"
+        ])
+
+    print(f"Saved: {AGG_FILE}")
+
 
 if __name__ == "__main__":
     run_model()
