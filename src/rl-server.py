@@ -27,15 +27,22 @@ def train_model(new=False):
         env = VecNormalize(env, norm_obs=True, norm_reward=False)
 
         path = "./models/ppo_wheelchair"
+        stats_path = "./models/vecnormalize_stats.pkl"
         prev_model = os.path.exists(path + ".zip")
 
         if prev_model and not new:
             print("Loading previous model")
             model = PPO.load(path, env=env)
+            # If stats exist from a previous run, load them into the normalizer
+            if os.path.exists(stats_path):
+                print("Loading existing VecNormalize stats")
+                env = VecNormalize.load(stats_path, env.venv)
         else:
             if prev_model:
                 print("Deleting previous model")
                 os.remove(path + ".zip")
+            if os.path.exists(stats_path):
+                os.remove(stats_path)
 
             print("Creating new model")
 
@@ -65,6 +72,9 @@ def train_model(new=False):
         print("Calling env.close()")
         env.close()
         model.save(path)
+        env.save(stats_path)  # Save normalizer stats for use in rl-test.py
+        print(f"Saved model to {path}.zip")
+        print(f"Saved VecNormalize stats to {stats_path}")
 
 
 if __name__ == "__main__":
