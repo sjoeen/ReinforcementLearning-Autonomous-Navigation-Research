@@ -172,7 +172,15 @@ class WheelchairEnv(gym.Env):
         """Get observation from server"""
         state = self.socket.recv_pyobj()
         state.prev_action = self.prev_action
-
+        
+        # Interpolate lidar back to 360 rays regardless of hardware resolution
+        if len(state.lidar) != 360:
+            state.lidar = np.interp(
+                np.linspace(0, 1, 360),
+                np.linspace(0, 1, len(state.lidar)),
+                state.lidar
+            )
+        
         return state
 
     def no_obs(self) -> np.ndarray:
