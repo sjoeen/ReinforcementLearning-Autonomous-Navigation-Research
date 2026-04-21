@@ -24,7 +24,7 @@ def train_model(new=False):
             return _init
 
         env = SubprocVecEnv([env_fn(i) for i in range(N_ROBOTS)])
-        env = VecNormalize(env, norm_obs=True, norm_reward=False)
+        env = VecNormalize(env, norm_obs=True, norm_reward=True)
 
         path = "./models/ppo_wheelchair"
         stats_path = "./models/vecnormalize_stats.pkl"

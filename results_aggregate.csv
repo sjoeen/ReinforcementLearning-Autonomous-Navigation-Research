@@ -1,2 +1,2 @@
 model,episodes,success_rate_%,collision_rate_%,timeout_rate_%,avg_steps,avg_mean_distance,avg_min_distance
-model_A_baseline,120056,0.00,100.00,0.00,1.5,-0.7006,-0.7010
+ppo_wheelchair,58,100.00,0.00,0.00,2953.9,0.5819,-0.0000

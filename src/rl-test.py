@@ -19,15 +19,15 @@ def run_model():
         return _init
 
     env = SubprocVecEnv([env_fn(i) for i in range(N_ROBOTS)])
-    env = VecNormalize(env, norm_obs=True, norm_reward=False)
+    env = VecNormalize.load("models/vecnormalize_stats.pkl", env)
+    env.training = False
+    env.norm_reward = False
 
-    # CHANGE THIS PATH BEFORE RUNNING
-    path = "models/model_A_baseline"
+    path = "models/ppo_wheelchair"
     assert os.path.exists(path + ".zip"), "Model path does not exist."
 
     model = PPO.load(path, env)
 
-    # ── Counters ─────────────────────────────────────────────
     success_counts   = [0] * N_ROBOTS
     collision_counts = [0] * N_ROBOTS
     timeout_counts   = [0] * N_ROBOTS
@@ -41,22 +41,26 @@ def run_model():
     start_times        = [time.time()] * N_ROBOTS
     episode_steps      = [0] * N_ROBOTS
     episode_distances  = [[] for _ in range(N_ROBOTS)]
+    just_reset         = [True] * N_ROBOTS
 
     print("Testing started! Please wait...")
     obs = env.reset()
 
     for _ in range(TIME_STEPS):
-        action, _ = model.predict(obs, deterministic=True)
+        action, _ = model.predict(obs, deterministic=False)
         obs, rewards, dones, infos = env.step(action)
+        raw_obs = env.unnormalize_obs(obs)
 
         for i in range(N_ROBOTS):
+            if just_reset[i]:
+                just_reset[i] = False
+                continue
+
             episode_steps[i] += 1
-            episode_distances[i].append(np.min(obs[i]))
+            episode_distances[i].append(np.min(raw_obs[i][:360]))
 
             if dones[i]:
                 episode_counts[i] += 1
-
-                # ── Outcome classification ───────────────────
                 is_success = infos[i].get("is_success", False)
                 is_collision = (not is_success) and (episode_steps[i] < 19000)
                 is_timeout   = (not is_success) and (episode_steps[i] >= 19000)
@@ -68,15 +72,11 @@ def run_model():
                 else:
                     timeout_counts[i] += 1
 
-                # ── Time ─────────────────────────────────────
                 end_time = time.time()
                 total_times[i] += (end_time - start_times[i])
                 start_times[i] = time.time()
-
-                # ── Steps ────────────────────────────────────
                 total_steps[i] += episode_steps[i]
 
-                # ── Distance metrics ─────────────────────────
                 if episode_distances[i]:
                     ep_mean = np.mean(episode_distances[i])
                     ep_min  = np.min(episode_distances[i])
@@ -86,13 +86,12 @@ def run_model():
                 total_mean_dist[i] += ep_mean
                 total_min_dist[i]  += ep_min
 
-                # ── Reset episode ────────────────────────────
                 episode_steps[i] = 0
                 episode_distances[i] = []
+                just_reset[i] = True
 
     print("\n=== FINAL RESULTS ===")
 
-    # ── Per-robot CSV ─────────────────────────────────────────
     with open(OUTPUT_FILE, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -125,7 +124,6 @@ def run_model():
 
     print(f"\nSaved: {OUTPUT_FILE}")
 
-    # ── Aggregate CSV ─────────────────────────────────────────
     total_ep = sum(episode_counts)
     n = max(total_ep, 1)
 

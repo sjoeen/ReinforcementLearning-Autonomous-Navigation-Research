@@ -51,17 +51,13 @@ class WheelchairEnv(gym.Env):
         self.commitment_threshold = 2.5  # Distance below which we force side commitment
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
-        """
-        Takes an action and returns the next observation, reward, done flag, and info.
-        :param action: Action to be taken (int)
-        :return: Tuple of (observation, reward, done, info)
-        """
-
         self.prev_action = action
         action = self.to_action(action)
-        reward = self.get_reward(self.prev_lidar, action)
-
+        
         obs = self.send_action_get_obs(action)
+        
+        # Use current obs lidar for reward instead of prev_lidar
+        reward = self.get_reward(obs.lidar, action)
 
         if obs.collided:
             reward += self.collision_reward()
@@ -72,9 +68,7 @@ class WheelchairEnv(gym.Env):
         self.time_step += 1
 
         done = obs.collided or obs.goal_reached
-        info = {
-            "is_success": obs.goal_reached,
-        }
+        info = {"is_success": obs.goal_reached}
 
         return obs.to_array(), reward, done, False, info
 
