@@ -46,7 +46,7 @@ Software Stack:
 Approach
 
 Algorithm:
-A standard DRL algorithm (e.g., PPO or DQN) is used from the baseline implementation.
+A standard DRL algorithm (PPO)  is used from the baseline implementation.
 
 The algorithm is kept constant so that any performance differences are caused only by sensor degradation, not model changes.
 
