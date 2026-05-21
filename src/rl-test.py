@@ -19,11 +19,11 @@ def run_model():
         return _init
 
     env = SubprocVecEnv([env_fn(i) for i in range(N_ROBOTS)])
-    env = VecNormalize.load("models/vecnormalize_stats.pkl", env)
+    env = VecNormalize.load("models/model_A/model_A_stats.pkl", env)
     env.training = False
     env.norm_reward = False
 
-    path = "models/ppo_wheelchair"
+    path = "models/model_A/model_A"
     assert os.path.exists(path + ".zip"), "Model path does not exist."
 
     model = PPO.load(path, env)
