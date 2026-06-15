@@ -9,21 +9,25 @@ import csv
 
 TIME_STEPS = 60_000
 N_ROBOTS = 3
-OUTPUT_FILE = "results_evaluation.csv"
-AGG_FILE = "results_aggregate.csv"
 
 def run_model():
+    rays = input("How many rays are currently set in RobotisLds01.proto? (36/90/180/360): ").strip()
+
+    OUTPUT_FILE = f"../results/model_D/lidar/{rays}/results_evaluation_{rays}.csv"
+    AGG_FILE = f"../results/model_D/lidar/{rays}/results_aggregate_{rays}.csv"
+    os.makedirs(f"../results/model_D/lidar/{rays}", exist_ok=True)
+
     def env_fn(i):
         def _init():
             return Monitor(WheelchairEnv(i))
         return _init
 
     env = SubprocVecEnv([env_fn(i) for i in range(N_ROBOTS)])
-    env = VecNormalize.load("models/model_A/model_A_stats.pkl", env)
+    env = VecNormalize.load("../models/fase2_model_d/vecnormalize_stats.pkl", env)
     env.training = False
     env.norm_reward = False
 
-    path = "models/model_A/model_A"
+    path = "../models/fase2_model_d/model"
     assert os.path.exists(path + ".zip"), "Model path does not exist."
 
     model = PPO.load(path, env)
@@ -43,7 +47,7 @@ def run_model():
     episode_distances  = [[] for _ in range(N_ROBOTS)]
     just_reset         = [True] * N_ROBOTS
 
-    print("Testing started! Please wait...")
+    print(f"Testing model D with {rays} rays. Please wait...")
     obs = env.reset()
 
     for _ in range(TIME_STEPS):
@@ -136,7 +140,7 @@ def run_model():
         ])
 
         writer.writerow([
-            os.path.basename(path), total_ep,
+            "model_D", total_ep,
             f"{100*sum(success_counts)/n:.2f}",
             f"{100*sum(collision_counts)/n:.2f}",
             f"{100*sum(timeout_counts)/n:.2f}",

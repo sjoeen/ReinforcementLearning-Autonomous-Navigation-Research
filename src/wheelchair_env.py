@@ -7,7 +7,7 @@ import zmq
 
 
 class WheelchairEnv(gym.Env):
-    def __init__(self, env_id: int):
+    def __init__(self, env_id: int, noise_level: float = 0.05):
         super(WheelchairEnv, self).__init__()
 
         context = zmq.Context()
@@ -15,6 +15,7 @@ class WheelchairEnv(gym.Env):
         self.socket.bind("ipc:///tmp/giorgio_" + str(env_id))
 
         self.env_id = env_id
+        self.noise_level = noise_level
 
         """ 
         Action and state space definition.
@@ -50,13 +51,12 @@ class WheelchairEnv(gym.Env):
         self.time_limit = 20_000
         self.commitment_threshold = 2.5  # Distance below which we force side commitment
 
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
+    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, dict]:
         self.prev_action = action
         action = self.to_action(action)
-        
+
         obs = self.send_action_get_obs(action)
-        
-        # Use current obs lidar for reward instead of prev_lidar
+
         reward = self.get_reward(obs.lidar, action)
 
         if obs.collided:
@@ -86,10 +86,7 @@ class WheelchairEnv(gym.Env):
         else:
             r_collision = 0.0
 
-        # Main navigation reward - replaces both direction_reward and early_side_commitment
         r_navigation = self.navigation_reward(obs, action)
-
-        # Penalize excessive turning when not needed
         r_stability = self.stability_reward(obs, action)
 
         total_reward = r_distance + r_collision + r_navigation + r_stability
@@ -98,27 +95,21 @@ class WheelchairEnv(gym.Env):
     def navigation_reward(self, obs: np.ndarray, action: Tuple[int, int]) -> float:
         _, w = action
 
-        # Define sectors
         left_sector = obs[100:170]
         front_sector = obs[170:190]
         right_sector = obs[190:260]
 
-        # Calculate clearances
         left_clearance = np.mean(left_sector)
         right_clearance = np.mean(right_sector)
 
-        # Check if there's an obstacle ahead that requires decision
         obstacle_ahead = np.any(front_sector < self.commitment_threshold)
 
         if obstacle_ahead:
-            # Force early commitment - decide on a side and stick with it
             clearance_diff = right_clearance - left_clearance
 
-            # Update preference with momentum (smoother decision making)
             alpha = 0.40
             self.prev_pref = (1 - alpha) * self.prev_pref + alpha * clearance_diff
 
-            # Strong reward for committing to the better side
             r = 3.0
 
             if self.prev_pref > 0.2:  # Prefer right
@@ -126,7 +117,6 @@ class WheelchairEnv(gym.Env):
             if self.prev_pref < -0.2:  # Prefer left
                 return r if w > 0 else -r
 
-            # If sides are equal, slightly prefer the side with more space
             if clearance_diff > 0.2:
                 return r if w < 0 else -r * 0.5
             if clearance_diff < -0.2:
@@ -134,33 +124,23 @@ class WheelchairEnv(gym.Env):
             if np.min(front_sector) < 1.0:
                 return r if w != 0 else -r
         elif w == 0:
-            # No immediate obstacle - prefer going straight but allow gentle corrections
             return 1.0
 
         return 0
 
     def stability_reward(self, obs: np.ndarray, action: Tuple[int, int]) -> float:
-        """Penalize erratic behavior - excessive turning back and forth"""
         _, w = action
-
-        # Light penalty for turning (encourages smoother paths)
         if w != 0:
             return -0.2
         return 0
 
     def reset_preference(self):
-        """Call this at the start of each episode"""
         self.prev_pref = 0.0
 
     def collision_reward(self) -> int:
         return -10
 
     def goal_reward(self) -> int:
-        """
-        Maybe the agent shouldn't receive a reward for reaching the end of the corridor,
-        because it will be telling the agent that the observation just before the goal is good,
-        when in fact it is not
-        """
         return 0
 
     def send_action_get_obs(self, action: Tuple[int, int]) -> RobotState:
@@ -172,7 +152,7 @@ class WheelchairEnv(gym.Env):
         """Get observation from server"""
         state = self.socket.recv_pyobj()
         state.prev_action = self.prev_action
-        
+
         # Interpolate lidar back to 360 rays regardless of hardware resolution
         if len(state.lidar) != 360:
             state.lidar = np.interp(
@@ -180,13 +160,18 @@ class WheelchairEnv(gym.Env):
                 np.linspace(0, 1, len(state.lidar)),
                 state.lidar
             )
-        
+
+        # Inject Gaussian noise if noise_level > 0
+        if self.noise_level > 0:
+            noise = np.random.normal(0, self.noise_level, size=state.lidar.shape)
+            state.lidar = np.clip(state.lidar + noise, 0.0, 10.0)
+
         return state
 
     def no_obs(self) -> np.ndarray:
         return np.zeros(self.obs_shape, dtype=np.float64)
 
-    def reset(self, seed: int = None) -> Tuple[np.ndarray, dict]:
+    def reset(self, seed: int = None, options: dict = None) -> Tuple[np.ndarray, dict]:
         obs = self.no_obs()
         self.prev_lidar = obs[:360]
         self.time_step = 0

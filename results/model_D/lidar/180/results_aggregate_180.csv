@@ -1,0 +1,2 @@
+model,episodes,success_rate_%,collision_rate_%,timeout_rate_%,avg_steps,avg_mean_distance,avg_min_distance
+model_D,82,100.00,0.00,0.00,2150.2,0.4392,-0.0000
