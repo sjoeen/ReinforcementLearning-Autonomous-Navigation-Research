@@ -93,7 +93,7 @@ def run_eval_fase3():
             continue
             
         print(f"A avaliar {cfg['name']} no mapa complexo...")
-        env = SubprocVecEnv([lambda: Monitor(WheelchairEnv(i, noise_level=NOISE_LEVEL)) for i in range(N_ROBOTS)])
+        env = SubprocVecEnv([lambda i=i: Monitor(WheelchairEnv(i, noise_level=NOISE_LEVEL)) for i in range(N_ROBOTS)])
         env = VecNormalize.load(stats, env)
         env.training, env.norm_reward = False, False
         model = cfg["class"].load(model_p, env=env)
