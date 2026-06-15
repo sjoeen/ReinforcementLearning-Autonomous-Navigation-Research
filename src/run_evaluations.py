@@ -66,7 +66,7 @@ def run_eval_fase2():
             
         for rays in test_rays:
             print(f"A testar {cfg['name']} forçando o LiDAR a responder com {rays} raios...")
-            env = SubprocVecEnv([lambda: Monitor(WheelchairEnv(i, noise_level=NOISE_LEVEL)) for i in range(N_ROBOTS)])
+            env = SubprocVecEnv([lambda i=i: Monitor(WheelchairEnv(i, noise_level=NOISE_LEVEL)) for i in range(N_ROBOTS)])
             env = VecNormalize.load(stats, env)
             env.training, env.norm_reward = False, False
             model = cfg["class"].load(model_p, env=env)
