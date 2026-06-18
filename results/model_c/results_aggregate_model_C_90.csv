@@ -1,2 +1,0 @@
-model,episodes,success_rate_%,collision_rate_%,timeout_rate_%,avg_steps,avg_mean_distance,avg_min_distance
-model,77,100.00,0.00,0.00,2280.9,0.4527,-0.0000

@@ -1,4 +1,0 @@
-robot_id,episodes,success_rate_%,collision_rate_%,timeout_rate_%,avg_steps,avg_time_s,avg_mean_distance,avg_min_distance
-0,27,100.00,0.00,0.00,2142.0,71.98,0.5516,-0.0000
-1,24,100.00,0.00,0.00,2439.2,81.96,0.4085,-0.0000
-2,26,100.00,0.00,0.00,2291.3,77.00,0.3900,-0.0000
