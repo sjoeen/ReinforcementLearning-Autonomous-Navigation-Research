@@ -1,4 +1,4 @@
-# Deep Reinforcement Learning for Robust LiDAR-Based Autonomous Navigation
+# Deep Reinforcement Learning for Robust LiDAR-Based Autonomous Navigation Research
 
 ### Investigating Sim-to-Real Robustness, Sensor Degradation, and Spatial Generalization in Autonomous Mobile Robots
 
