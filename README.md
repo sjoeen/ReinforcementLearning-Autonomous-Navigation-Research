@@ -328,32 +328,3 @@ Potential extensions include:
 | PPO Fine-Tuned Transfer        | 46%           |
 | DQN Complex Environment        | 65%           |
 | Dynamic Obstacle Awareness     | Failed        |
-
----
-
-# References
-
-This project builds upon research and tooling from:
-
-* Stable-Baselines3
-* OpenAI Gym
-* PPO (Schulman et al.)
-* DQN (Mnih et al.)
-* Webots Robotics Simulator
-
----
-
-## Repository Structure
-
-```text
-.
-├── controllers/
-├── environments/
-├── models/
-├── training/
-├── evaluation/
-├── results/
-├── plots/
-├── assets/
-└── README.md
-```
